@@ -6,13 +6,14 @@ A super simple FastAPI application that allows students to view and sign up for 
 
 - View all available extracurricular activities
 - Sign up for activities
+- Persistent data storage using SQLite database
 
 ## Getting Started
 
 1. Install the dependencies:
 
    ```
-   pip install fastapi uvicorn
+   pip install -r ../requirements.txt
    ```
 
 2. Run the application:
@@ -31,20 +32,21 @@ A super simple FastAPI application that allows students to view and sign up for 
 | ------ | ----------------------------------------------------------------- | ------------------------------------------------------------------- |
 | GET    | `/activities`                                                     | Get all activities with their details and current participant count |
 | POST   | `/activities/{activity_name}/signup?email=student@mergington.edu` | Sign up for an activity                                             |
+| DELETE | `/activities/{activity_name}/unregister?email=student@mergington.edu` | Unregister from an activity                                      |
 
 ## Data Model
 
-The application uses a simple data model with meaningful identifiers:
+The application uses SQLAlchemy ORM with SQLite for persistent data storage:
 
-1. **Activities** - Uses activity name as identifier:
-
+1. **Activity** - Represents extracurricular activities:
+   - Name (unique identifier)
    - Description
    - Schedule
-   - Maximum number of participants allowed
-   - List of student emails who are signed up
+   - Maximum number of participants
+   - Participants (many-to-many relationship)
 
-2. **Students** - Uses email as identifier:
-   - Name
-   - Grade level
+2. **Participant** - Represents students:
+   - Email (unique identifier)
+   - Activities (many-to-many relationship)
 
-All data is stored in memory, which means data will be reset when the server restarts.
+**Data Persistence**: All data is now stored in a SQLite database (`activities.db`) and persists across server restarts. Sample data is automatically loaded on first startup.
